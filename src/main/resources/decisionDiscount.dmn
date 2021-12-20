@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="decisionDiscountD" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.11.1">
+  <decision id="decisionDiscount" name="DecisionDiscount">
+    <decisionTable id="DecisionTable_14871u3">
+      <input id="Input_1" label="readerType">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>readerType</text>
+        </inputExpression>
+        <inputValues id="UnaryTests_0n6tfdg">
+          <text>"silver","gold","diamond"</text>
+        </inputValues>
+      </input>
+      <input id="InputClause_0gqu3st" label="feedbacksGiven">
+        <inputExpression id="LiteralExpression_1syuesy" typeRef="integer">
+          <text>feedbacksGiven</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="discount" name="discount" typeRef="integer" />
+      <rule id="DecisionRule_0bdvfrd">
+        <inputEntry id="UnaryTests_1uc8orb">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jkg4xf">
+          <text>&lt;=3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10h9t64">
+          <text>10</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0388shh">
+        <inputEntry id="UnaryTests_0zxbg4k">
+          <text>"silver"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0idb47r">
+          <text>&gt;3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0pzqdcg">
+          <text>20</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1goyw2s">
+        <inputEntry id="UnaryTests_0v1n6m2">
+          <text>"gold"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07y9qgf">
+          <text>&lt;=3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1orgikl">
+          <text>20</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1xuk8qj">
+        <inputEntry id="UnaryTests_1eafi22">
+          <text>"gold"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1qbgm27">
+          <text>&gt;3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0choyvp">
+          <text>30</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1iq5pfi">
+        <inputEntry id="UnaryTests_01a8at0">
+          <text>"diamond"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1kqpmrx">
+          <text>&lt;=3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1iwjrbj">
+          <text>30</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_08c5e27">
+        <inputEntry id="UnaryTests_12q6fyz">
+          <text>"diamond"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0t13tpp">
+          <text>&gt;3</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0en76t4">
+          <text>50</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="decisionDiscount">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
