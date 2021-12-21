@@ -1,65 +1,57 @@
 package org.camunda.education.educationTrail;
 
-import javax.annotation.PostConstruct;
-
-import org.apache.ibatis.logging.LogFactory;
-import org.camunda.bpm.engine.ProcessEngine;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import java.util.HashMap;
+import java.util.Map;
+import org.camunda.bpm.engine.runtime.EventSubscription;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
-import org.camunda.bpm.extension.process_test_coverage.junit.rules.TestCoverageProcessEngineRuleBuilder;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.camunda.bpm.engine.test.mock.Mocks;
+import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension;
+import org.camunda.bpm.extension.process_test_coverage.junit5.ProcessEngineCoverageExtension;
+import org.camunda.education.educationTrail.delegates.EvaluateReaderTypeDelegate;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.*;
-import static org.junit.Assert.*;
-import static org.assertj.core.api.Assertions.*;
-
+// import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * Test case starting an in-memory database-backed Process Engine.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
+@ExtendWith({SpringExtension.class})
+@ExtendWith(ProcessEngineCoverageExtension.class)
 public class ProcessUnitTest {
 
-  @Autowired
-  private ProcessEngine processEngine;
-
-  static {
-    LogFactory.useSlf4jLogging(); // MyBatis
-  }
-
-  @ClassRule
-  @Rule
-  public static ProcessEngineRule rule;
-
-  @PostConstruct
-  void initRule() {
-    rule = TestCoverageProcessEngineRuleBuilder.create(processEngine).build();
-  }
-
-  @Before
-  public void setup() {
-    init(processEngine);
-  }
-
+  @Deployment(resources = {"bookstorediscounts.bpmn, decisionDiscount.dmn"})
   @Test
-  @Deployment(resources = "process.bpmn") // only required for process test coverage
   public void testHappyPath() {
-    // Drive the process by API and assert correct behavior by camunda-bpm-assert
+    Mocks.register("evaluateReaderType", new EvaluateReaderTypeDelegate());
 
-    ProcessInstance processInstance = processEngine().getRuntimeService()
-        .startProcessInstanceByKey(ProcessConstants.PROCESS_DEFINITION_KEY);
+    Map<String, Object> variables = new HashMap<String, Object>();
+    variables.put("readerType", "silver");
+    variables.put("feedbacksGiven", "3");
+
+
+    ProcessInstance processInstance =
+        runtimeService().startProcessInstanceByKey("BookstoreDiscount", variables);
+
+    assertThat(processInstance).isStarted().isWaitingAt("waitingCustomer");
+
+    EventSubscription subscription = runtimeService().createEventSubscriptionQuery()
+        .processInstanceId(processInstance.getId()).eventType("waitingCustomer").singleResult();
+
+    runtimeService().messageEventReceived(subscription.getEventName(),
+        subscription.getExecutionId());
+
 
     assertThat(processInstance).isEnded();
+
+
 
   }
 
