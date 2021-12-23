@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 
 @ExtendWith(ProcessEngineCoverageExtension.class)
-public class ProcessUnitTest {
+public class BookstoreDiscountUnitTest {
 
   @Deployment(resources = {"bookstorediscounts.bpmn", "decisionDiscount.dmn"})
   // @Deployment(resources = "bookstorediscounts.bpmn")

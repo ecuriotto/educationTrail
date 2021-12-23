@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0z41xfg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0z41xfg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
   <bpmn:collaboration id="Collaboration_1332ac2">
     <bpmn:participant id="reader" name="Reader" processRef="ReaderBuysBooks" />
   </bpmn:collaboration>
@@ -11,50 +11,47 @@
       <bpmn:incoming>Flow_0zj8xt5</bpmn:incoming>
       <bpmn:outgoing>Flow_1wdojq4</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_16idend" name="Submit books feedbacks">
+    <bpmn:userTask id="Task_SubmitFeedbacks" name="Submit books feedbacks">
       <bpmn:incoming>Flow_1wdojq4</bpmn:incoming>
       <bpmn:outgoing>Flow_0ow8797</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:intermediateCatchEvent id="Event_1dhdtxc" name="suggestions and discounts received">
+    <bpmn:intermediateCatchEvent id="MSG_getSuggestions" name="suggestions and discounts received">
       <bpmn:incoming>Flow_01z4obd</bpmn:incoming>
       <bpmn:outgoing>Flow_060d584</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1p0s2wb" messageRef="Message_1t8bjg0" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:userTask id="Activity_0m9qnwn" name="Buy books">
+    <bpmn:userTask id="Task_BuyBooks" name="Buy books">
       <bpmn:incoming>Flow_060d584</bpmn:incoming>
-      <bpmn:outgoing>Flow_16a9pv5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_04a00gp</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_008lzf9" name="Something to buy?">
-      <bpmn:incoming>Flow_16a9pv5</bpmn:incoming>
-      <bpmn:outgoing>Flow_0vz3aqk</bpmn:outgoing>
-      <bpmn:outgoing>Flow_19qkcwc</bpmn:outgoing>
+    <bpmn:exclusiveGateway id="Gateway_008lzf9" name="Something to buy?" default="Flow_BuyBooksNo">
+      <bpmn:incoming>Flow_04a00gp</bpmn:incoming>
+      <bpmn:outgoing>Flow_BuyBooksNo</bpmn:outgoing>
+      <bpmn:outgoing>Flow_BuyBooksYes</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="Event_0nrf7bs" name="Books not bought">
-      <bpmn:incoming>Flow_0vz3aqk</bpmn:incoming>
+    <bpmn:endEvent id="EndMsgEvent_NotBought" name="Books not bought">
+      <bpmn:incoming>Flow_BuyBooksNo</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0z4msrk" messageRef="Message_1i9ksc9" />
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_11iewja" name="End reminder">
+    <bpmn:endEvent id="END_reminder" name="End reminder">
       <bpmn:incoming>Flow_1997mbs</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="Activity_1c354kz" name="Reminder" camunda:delegateExpression="#{sendReminder}">
       <bpmn:incoming>Flow_16v8yuz</bpmn:incoming>
       <bpmn:outgoing>Flow_1997mbs</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_1hpfmz1" name="Books bought">
-      <bpmn:incoming>Flow_19qkcwc</bpmn:incoming>
+    <bpmn:endEvent id="EndMsgEvent_Bought" name="Books bought">
+      <bpmn:incoming>Flow_BuyBooksYes</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_088cums" messageRef="Message_0mbh56z" />
     </bpmn:endEvent>
-    <bpmn:intermediateThrowEvent id="Event_0xom2tt" name="Feedback sent">
-      <bpmn:incoming>Flow_0ow8797</bpmn:incoming>
-      <bpmn:outgoing>Flow_01z4obd</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1q10j2i" messageRef="Message_04w6vo8" />
-    </bpmn:intermediateThrowEvent>
     <bpmn:subProcess id="Activity_0e1279e" triggeredByEvent="true">
-      <bpmn:startEvent id="Event_1xzqdqi" name="1 month">
+      <bpmn:startEvent id="TIM_7days" name="7 days">
         <bpmn:outgoing>Flow_1g4yp2d</bpmn:outgoing>
-        <bpmn:timerEventDefinition id="TimerEventDefinition_1elzsr2" />
+        <bpmn:timerEventDefinition id="TimerEventDefinition_1elzsr2">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P7D</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
       </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_0p32enh" name="Register cancelation" camunda:delegateExpression="#{registerCancelation}">
+      <bpmn:serviceTask id="registerCancelation" name="Register cancelation" camunda:delegateExpression="#{registerTimeout}">
         <bpmn:incoming>Flow_1g4yp2d</bpmn:incoming>
         <bpmn:outgoing>Flow_148h5d0</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -62,23 +59,44 @@
         <bpmn:incoming>Flow_148h5d0</bpmn:incoming>
         <bpmn:messageEventDefinition id="MessageEventDefinition_08wh9j3" messageRef="Message_0k2sk1i" />
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_148h5d0" sourceRef="Activity_0p32enh" targetRef="Event_1h8ka8v" />
-      <bpmn:sequenceFlow id="Flow_1g4yp2d" sourceRef="Event_1xzqdqi" targetRef="Activity_0p32enh" />
+      <bpmn:sequenceFlow id="Flow_148h5d0" sourceRef="registerCancelation" targetRef="Event_1h8ka8v" />
+      <bpmn:sequenceFlow id="Flow_1g4yp2d" sourceRef="TIM_7days" targetRef="registerCancelation" />
     </bpmn:subProcess>
-    <bpmn:boundaryEvent id="Event_1d81dkc" name="3 days" cancelActivity="false" attachedToRef="Activity_0m9qnwn">
+    <bpmn:boundaryEvent id="TIM_wait3Days" name="3 days" cancelActivity="false" attachedToRef="Task_BuyBooks">
       <bpmn:outgoing>Flow_16v8yuz</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_0rie5ii" />
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0rie5ii">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P3D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_1997mbs" sourceRef="Activity_1c354kz" targetRef="Event_11iewja" />
-    <bpmn:sequenceFlow id="Flow_16v8yuz" sourceRef="Event_1d81dkc" targetRef="Activity_1c354kz" />
-    <bpmn:sequenceFlow id="Flow_0vz3aqk" name="No" sourceRef="Gateway_008lzf9" targetRef="Event_0nrf7bs" />
-    <bpmn:sequenceFlow id="Flow_19qkcwc" name="Yes" sourceRef="Gateway_008lzf9" targetRef="Event_1hpfmz1" />
-    <bpmn:sequenceFlow id="Flow_16a9pv5" sourceRef="Activity_0m9qnwn" targetRef="Gateway_008lzf9" />
-    <bpmn:sequenceFlow id="Flow_060d584" sourceRef="Event_1dhdtxc" targetRef="Activity_0m9qnwn" />
-    <bpmn:sequenceFlow id="Flow_0ow8797" sourceRef="Activity_16idend" targetRef="Event_0xom2tt" />
-    <bpmn:sequenceFlow id="Flow_1wdojq4" sourceRef="Activity_1lg7tus" targetRef="Activity_16idend" />
+    <bpmn:sequenceFlow id="Flow_1997mbs" sourceRef="Activity_1c354kz" targetRef="END_reminder" />
+    <bpmn:sequenceFlow id="Flow_16v8yuz" sourceRef="TIM_wait3Days" targetRef="Activity_1c354kz" />
+    <bpmn:sequenceFlow id="Flow_BuyBooksNo" name="No" sourceRef="Gateway_008lzf9" targetRef="EndMsgEvent_NotBought" />
+    <bpmn:sequenceFlow id="Flow_BuyBooksYes" name="Yes" sourceRef="Gateway_008lzf9" targetRef="EndMsgEvent_Bought">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{booksBought}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_060d584" sourceRef="MSG_getSuggestions" targetRef="Task_BuyBooks" />
+    <bpmn:sequenceFlow id="Flow_0ow8797" sourceRef="Task_SubmitFeedbacks" targetRef="feedbackReceived" />
+    <bpmn:sequenceFlow id="Flow_1wdojq4" sourceRef="Activity_1lg7tus" targetRef="Task_SubmitFeedbacks" />
     <bpmn:sequenceFlow id="Flow_0zj8xt5" sourceRef="Event_0poisll" targetRef="Activity_1lg7tus" />
-    <bpmn:sequenceFlow id="Flow_01z4obd" sourceRef="Event_0xom2tt" targetRef="Event_1dhdtxc" />
+    <bpmn:sequenceFlow id="Flow_01z4obd" sourceRef="Event_0xom2tt" targetRef="MSG_getSuggestions" />
+    <bpmn:intermediateThrowEvent id="Event_0xom2tt" name="Feedback sent">
+      <bpmn:incoming>Flow_FeedbackReceivedYes</bpmn:incoming>
+      <bpmn:outgoing>Flow_01z4obd</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1q10j2i" messageRef="Message_04w6vo8" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="feedbackReceived" name="Feedback received" default="Flow_FeedbackReceivedNo">
+      <bpmn:incoming>Flow_0ow8797</bpmn:incoming>
+      <bpmn:outgoing>Flow_FeedbackReceivedYes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_FeedbackReceivedNo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_FeedbackReceivedYes" name="yes" sourceRef="feedbackReceived" targetRef="Event_0xom2tt">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{feedbackReceived}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="END_noFeedbacks">
+      <bpmn:incoming>Flow_FeedbackReceivedNo</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_FeedbackReceivedNo" name="no" sourceRef="feedbackReceived" targetRef="END_noFeedbacks" />
+    <bpmn:sequenceFlow id="Flow_04a00gp" sourceRef="Task_BuyBooks" targetRef="Gateway_008lzf9" />
     <bpmn:textAnnotation id="TextAnnotation_1innbv1">
       <bpmn:text>Give feedbacks about 3 books read in the last 5 years. Ratings in range 0-5. Optionally give comments</bpmn:text>
     </bpmn:textAnnotation>
@@ -105,7 +123,7 @@
         <di:waypoint x="955" y="350" />
         <di:waypoint x="975" y="350" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0vz3aqk_di" bpmnElement="Flow_0vz3aqk">
+      <bpmndi:BPMNEdge id="Flow_0vz3aqk_di" bpmnElement="Flow_BuyBooksNo">
         <di:waypoint x="1115" y="225" />
         <di:waypoint x="1115" y="140" />
         <di:waypoint x="1237" y="140" />
@@ -113,16 +131,12 @@
           <dc:Bounds x="1123" y="113" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_19qkcwc_di" bpmnElement="Flow_19qkcwc">
+      <bpmndi:BPMNEdge id="Flow_19qkcwc_di" bpmnElement="Flow_BuyBooksYes">
         <di:waypoint x="1140" y="250" />
         <di:waypoint x="1557" y="250" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1224" y="232" width="18" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_16a9pv5_di" bpmnElement="Flow_16a9pv5">
-        <di:waypoint x="1035" y="250" />
-        <di:waypoint x="1090" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_060d584_di" bpmnElement="Flow_060d584">
         <di:waypoint x="843" y="250" />
@@ -130,7 +144,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ow8797_di" bpmnElement="Flow_0ow8797">
         <di:waypoint x="555" y="250" />
-        <di:waypoint x="630" y="250" />
+        <di:waypoint x="585" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1wdojq4_di" bpmnElement="Flow_1wdojq4">
         <di:waypoint x="415" y="250" />
@@ -141,8 +155,27 @@
         <di:waypoint x="315" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01z4obd_di" bpmnElement="Flow_01z4obd">
-        <di:waypoint x="666" y="250" />
+        <di:waypoint x="718" y="250" />
         <di:waypoint x="807" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0swgk6g_di" bpmnElement="Flow_FeedbackReceivedYes">
+        <di:waypoint x="635" y="250" />
+        <di:waypoint x="682" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="223" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i487wa_di" bpmnElement="Flow_FeedbackReceivedNo">
+        <di:waypoint x="610" y="275" />
+        <di:waypoint x="610" y="380" />
+        <di:waypoint x="682" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="619" y="325" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04a00gp_di" bpmnElement="Flow_04a00gp">
+        <di:waypoint x="1035" y="250" />
+        <di:waypoint x="1090" y="250" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0poisll_di" bpmnElement="Event_0poisll">
         <dc:Bounds x="227" y="232" width="36" height="36" />
@@ -153,16 +186,16 @@
       <bpmndi:BPMNShape id="Activity_1lg7tus_di" bpmnElement="Activity_1lg7tus">
         <dc:Bounds x="315" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_16idend_di" bpmnElement="Activity_16idend">
+      <bpmndi:BPMNShape id="Activity_16idend_di" bpmnElement="Task_SubmitFeedbacks">
         <dc:Bounds x="455" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1dhdtxc_di" bpmnElement="Event_1dhdtxc">
+      <bpmndi:BPMNShape id="Event_1dhdtxc_di" bpmnElement="MSG_getSuggestions">
         <dc:Bounds x="807" y="232" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="785" y="180" width="81" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0m9qnwn_di" bpmnElement="Activity_0m9qnwn">
+      <bpmndi:BPMNShape id="Activity_0m9qnwn_di" bpmnElement="Task_BuyBooks">
         <dc:Bounds x="935" y="210" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_008lzf9_di" bpmnElement="Gateway_008lzf9" isMarkerVisible="true">
@@ -171,13 +204,13 @@
           <dc:Bounds x="1083" y="282" width="65" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0nrf7bs_di" bpmnElement="Event_0nrf7bs">
+      <bpmndi:BPMNShape id="Event_0nrf7bs_di" bpmnElement="EndMsgEvent_NotBought">
         <dc:Bounds x="1237" y="122" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1212" y="98" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_11iewja_di" bpmnElement="Event_11iewja">
+      <bpmndi:BPMNShape id="Event_11iewja_di" bpmnElement="END_reminder">
         <dc:Bounds x="1097" y="332" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1082" y="375" width="67" height="14" />
@@ -186,17 +219,26 @@
       <bpmndi:BPMNShape id="Activity_1c354kz_di" bpmnElement="Activity_1c354kz">
         <dc:Bounds x="975" y="310" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1hpfmz1_di" bpmnElement="Event_1hpfmz1">
+      <bpmndi:BPMNShape id="Event_1hpfmz1_di" bpmnElement="EndMsgEvent_Bought">
         <dc:Bounds x="1557" y="232" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1541" y="208" width="68" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0xom2tt_di" bpmnElement="Event_0xom2tt">
-        <dc:Bounds x="630" y="232" width="36" height="36" />
+        <dc:Bounds x="682" y="232" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="568" y="273" width="73" height="14" />
+          <dc:Bounds x="620" y="273" width="73" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_089mcb1_di" bpmnElement="feedbackReceived" isMarkerVisible="true">
+        <dc:Bounds x="585" y="225" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="555" y="282" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1j8a8hz_di" bpmnElement="END_noFeedbacks">
+        <dc:Bounds x="682" y="362" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0e1279e_di" bpmnElement="Activity_0e1279e" isExpanded="true">
         <dc:Bounds x="1615" y="310" width="350" height="200" />
@@ -209,13 +251,13 @@
         <di:waypoint x="1691" y="410" />
         <di:waypoint x="1745" y="410" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_1xzqdqi_di" bpmnElement="Event_1xzqdqi">
+      <bpmndi:BPMNShape id="Event_1xzqdqi_di" bpmnElement="TIM_7days">
         <dc:Bounds x="1655" y="392" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1653" y="435" width="40" height="14" />
+          <dc:Bounds x="1657" y="435" width="33" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p32enh_di" bpmnElement="Activity_0p32enh">
+      <bpmndi:BPMNShape id="Activity_0p32enh_di" bpmnElement="registerCancelation">
         <dc:Bounds x="1745" y="370" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1h8ka8v_di" bpmnElement="Event_1h8ka8v">
@@ -224,7 +266,7 @@
           <dc:Bounds x="1872" y="435" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1d81dkc_di" bpmnElement="Event_1d81dkc">
+      <bpmndi:BPMNShape id="Event_1d81dkc_di" bpmnElement="TIM_wait3Days">
         <dc:Bounds x="937" y="272" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="908" y="313" width="33" height="14" />
