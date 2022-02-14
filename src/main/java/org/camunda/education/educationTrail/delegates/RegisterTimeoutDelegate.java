@@ -15,7 +15,7 @@ public class RegisterTimeoutDelegate implements JavaDelegate {
 
   public void execute(DelegateExecution execution) throws Exception {
     Random random = new Random();
-    int timeToWait = random.nextInt(100000);
+    int timeToWait = random.nextInt(10000);
     Thread.sleep(timeToWait);
     LOGGER.info("Timeout.......too slooooowwww");
   }
