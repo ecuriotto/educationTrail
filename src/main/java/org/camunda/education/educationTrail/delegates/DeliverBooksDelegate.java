@@ -4,6 +4,7 @@ package org.camunda.education.educationTrail.delegates;
 
 import java.util.Random;
 import javax.inject.Named;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -20,6 +21,11 @@ public class DeliverBooksDelegate implements JavaDelegate {
     int timeToWait = random.nextInt(10000);
     Thread.sleep(timeToWait);
     Integer booksNumber = (Integer) execution.getVariable("booksNumber");
+
+    int possibilityForError = random.nextInt(2);
+    if (possibilityForError == 1) {
+      throw new BpmnError("deliverBooksError", "Error with delivering books");
+    }
 
     LOGGER.info("Deliver books......." + booksNumber);
   }

@@ -29,6 +29,9 @@ If the suggestions and discounts are appealing, then the reader will the select 
         <bpmn:flowNodeRef>Activity_1lpbnin</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>paymentReceived</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1t1o4wa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0wytcwt</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0unfk92</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>deliverBooksError</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:parallelGateway id="Gateway_1o7876s">
@@ -115,6 +118,20 @@ If the suggestions and discounts are appealing, then the reader will the select 
     <bpmn:sequenceFlow id="Flow_0zz23t0" sourceRef="Activity_1tut10o" targetRef="Gateway_1o7876s" />
     <bpmn:sequenceFlow id="Flow_1qk1078" sourceRef="Gateway_0gvjsn3" targetRef="Event_03m06wc" />
     <bpmn:sequenceFlow id="Flow_1dsxyua" sourceRef="Event_03m06wc" targetRef="waitingCustomer" />
+    <bpmn:sequenceFlow id="Flow_0mnl7pb" sourceRef="deliverBooksError" targetRef="Activity_0unfk92" />
+    <bpmn:sequenceFlow id="Flow_043vzuc" sourceRef="Activity_0unfk92" targetRef="Event_0wytcwt" />
+    <bpmn:endEvent id="Event_0wytcwt">
+      <bpmn:incoming>Flow_043vzuc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="Activity_0unfk92" name="Manage error" scriptFormat="javascript">
+      <bpmn:incoming>Flow_0mnl7pb</bpmn:incoming>
+      <bpmn:outgoing>Flow_043vzuc</bpmn:outgoing>
+      <bpmn:script>print('Error managed');</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:boundaryEvent id="deliverBooksError" name="deliver Books Error" attachedToRef="Activity_1lpbnin">
+      <bpmn:outgoing>Flow_0mnl7pb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_06hzr6i" camunda:errorCodeVariable="deliverBooksError" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
     <bpmn:textAnnotation id="TextAnnotation_0rhki7h">
       <bpmn:text>Silver, Gold, Diamond</bpmn:text>
     </bpmn:textAnnotation>
@@ -138,74 +155,74 @@ If the suggestions and discounts are appealing, then the reader will the select 
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0yemv59">
       <bpmndi:BPMNShape id="Participant_0j74sdl_di" bpmnElement="bookstoreDiscount" isHorizontal="true">
-        <dc:Bounds x="155" y="80" width="1715" height="600" />
+        <dc:Bounds x="155" y="80" width="1803" height="600" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1ypyxpb_di" bpmnElement="Lane_1ypyxpb" isHorizontal="true">
-        <dc:Bounds x="185" y="80" width="1685" height="600" />
+        <dc:Bounds x="185" y="80" width="1773" height="600" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0rhki7h_di" bpmnElement="TextAnnotation_0rhki7h">
-        <dc:Bounds x="420" y="210" width="100" height="41" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_00791gq_di" bpmnElement="TextAnnotation_00791gq">
-        <dc:Bounds x="540" y="196" width="100" height="70" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0nak3mv_di" bpmnElement="TextAnnotation_0nak3mv">
-        <dc:Bounds x="380" y="500" width="100" height="113" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1yvnhp6_di" bpmnElement="Flow_1yvnhp6">
-        <di:waypoint x="1268" y="190" />
-        <di:waypoint x="1312" y="190" />
+      <bpmndi:BPMNEdge id="Flow_1dsxyua_di" bpmnElement="Flow_1dsxyua">
+        <di:waypoint x="838" y="330" />
+        <di:waypoint x="1125" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1g4bhiz_di" bpmnElement="Flow_1g4bhiz">
-        <di:waypoint x="1150" y="305" />
-        <di:waypoint x="1150" y="190" />
-        <di:waypoint x="1232" y="190" />
+      <bpmndi:BPMNEdge id="Flow_1qk1078_di" bpmnElement="Flow_1qk1078">
+        <di:waypoint x="735" y="330" />
+        <di:waypoint x="802" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_045yg9p_di" bpmnElement="Flow_045yg9p">
-        <di:waypoint x="1175" y="330" />
-        <di:waypoint x="1552" y="330" />
+      <bpmndi:BPMNEdge id="Flow_0zz23t0_di" bpmnElement="Flow_0zz23t0">
+        <di:waypoint x="420" y="330" />
+        <di:waypoint x="445" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_05eivsr_di" bpmnElement="Flow_05eivsr">
-        <di:waypoint x="1720" y="330" />
-        <di:waypoint x="1792" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0nibed1_di" bpmnElement="Flow_0nibed1">
-        <di:waypoint x="1588" y="330" />
-        <di:waypoint x="1620" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1fx1z11_di" bpmnElement="Flow_1fx1z11">
-        <di:waypoint x="268" y="330" />
-        <di:waypoint x="320" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0etg4lp_di" bpmnElement="Flow_0etg4lp">
-        <di:waypoint x="630" y="330" />
-        <di:waypoint x="685" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1tum9ke_di" bpmnElement="Flow_1tum9ke">
-        <di:waypoint x="630" y="470" />
-        <di:waypoint x="710" y="470" />
-        <di:waypoint x="710" y="355" />
+      <bpmndi:BPMNEdge id="Flow_165d2nu_di" bpmnElement="Flow_165d2nu">
+        <di:waypoint x="495" y="330" />
+        <di:waypoint x="530" y="330" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0qcen6x_di" bpmnElement="Flow_0qcen6x">
         <di:waypoint x="470" y="355" />
         <di:waypoint x="470" y="470" />
         <di:waypoint x="530" y="470" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_165d2nu_di" bpmnElement="Flow_165d2nu">
-        <di:waypoint x="495" y="330" />
-        <di:waypoint x="530" y="330" />
+      <bpmndi:BPMNEdge id="Flow_1tum9ke_di" bpmnElement="Flow_1tum9ke">
+        <di:waypoint x="630" y="470" />
+        <di:waypoint x="710" y="470" />
+        <di:waypoint x="710" y="355" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0zz23t0_di" bpmnElement="Flow_0zz23t0">
-        <di:waypoint x="420" y="330" />
-        <di:waypoint x="445" y="330" />
+      <bpmndi:BPMNEdge id="Flow_0etg4lp_di" bpmnElement="Flow_0etg4lp">
+        <di:waypoint x="630" y="330" />
+        <di:waypoint x="685" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1qk1078_di" bpmnElement="Flow_1qk1078">
-        <di:waypoint x="735" y="330" />
-        <di:waypoint x="802" y="330" />
+      <bpmndi:BPMNEdge id="Flow_1fx1z11_di" bpmnElement="Flow_1fx1z11">
+        <di:waypoint x="268" y="330" />
+        <di:waypoint x="320" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1dsxyua_di" bpmnElement="Flow_1dsxyua">
-        <di:waypoint x="838" y="330" />
-        <di:waypoint x="1125" y="330" />
+      <bpmndi:BPMNEdge id="Flow_0nibed1_di" bpmnElement="Flow_0nibed1">
+        <di:waypoint x="1588" y="330" />
+        <di:waypoint x="1620" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05eivsr_di" bpmnElement="Flow_05eivsr">
+        <di:waypoint x="1720" y="330" />
+        <di:waypoint x="1792" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_045yg9p_di" bpmnElement="Flow_045yg9p">
+        <di:waypoint x="1175" y="330" />
+        <di:waypoint x="1552" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g4bhiz_di" bpmnElement="Flow_1g4bhiz">
+        <di:waypoint x="1150" y="305" />
+        <di:waypoint x="1150" y="190" />
+        <di:waypoint x="1232" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yvnhp6_di" bpmnElement="Flow_1yvnhp6">
+        <di:waypoint x="1268" y="190" />
+        <di:waypoint x="1312" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mnl7pb_di" bpmnElement="Flow_0mnl7pb">
+        <di:waypoint x="1650" y="388" />
+        <di:waypoint x="1650" y="470" />
+        <di:waypoint x="1690" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_043vzuc_di" bpmnElement="Flow_043vzuc">
+        <di:waypoint x="1790" y="470" />
+        <di:waypoint x="1822" y="470" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_05e2q23_di" bpmnElement="Gateway_1o7876s">
         <dc:Bounds x="445" y="305" width="50" height="50" />
@@ -270,6 +287,12 @@ If the suggestions and discounts are appealing, then the reader will the select 
           <dc:Bounds x="1485" y="355" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0wytcwt_di" bpmnElement="Event_0wytcwt">
+        <dc:Bounds x="1822" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rycvlf_di" bpmnElement="Activity_0unfk92">
+        <dc:Bounds x="1690" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qs9iax_di" bpmnElement="Activity_1t1o4wa" isExpanded="true">
         <dc:Bounds x="1020" y="457" width="350" height="200" />
       </bpmndi:BPMNShape>
@@ -296,6 +319,15 @@ If the suggestions and discounts are appealing, then the reader will the select 
       <bpmndi:BPMNShape id="Activity_19197wy_di" bpmnElement="Activity_0umgnj7">
         <dc:Bounds x="1150" y="517" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0rhki7h_di" bpmnElement="TextAnnotation_0rhki7h">
+        <dc:Bounds x="420" y="210" width="100" height="41" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_00791gq_di" bpmnElement="TextAnnotation_00791gq">
+        <dc:Bounds x="540" y="196" width="100" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0nak3mv_di" bpmnElement="TextAnnotation_0nak3mv">
+        <dc:Bounds x="380" y="500" width="100" height="113" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_10xq7x2_di" bpmnElement="Association_10xq7x2">
         <di:waypoint x="408" y="290" />
         <di:waypoint x="445" y="251" />
@@ -308,6 +340,12 @@ If the suggestions and discounts are appealing, then the reader will the select 
         <di:waypoint x="530" y="485" />
         <di:waypoint x="480" y="500" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_01ygls6_di" bpmnElement="deliverBooksError">
+        <dc:Bounds x="1632" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1617" y="395" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
