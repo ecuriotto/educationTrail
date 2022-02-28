@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import java.util.HashMap;
 import java.util.Map;
+import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.runtime.EventSubscription;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -15,8 +17,13 @@ import org.camunda.education.educationTrail.delegates.DeliverBooksDelegate;
 import org.camunda.education.educationTrail.delegates.EvaluateReaderTypeDelegate;
 import org.camunda.education.educationTrail.delegates.ProposeSuggestionsDelegate;
 import org.camunda.education.educationTrail.delegates.RegisterTimeoutDelegate;
+import org.camunda.education.educationTrail.services.DeliverBooksService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.Mockito.*;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 
 // import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -25,20 +32,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
  */
 
 
+@ExtendWith({SpringExtension.class})
 @ExtendWith(ProcessEngineCoverageExtension.class)
 public class BookstoreDiscountUnitTest {
 
+  @Mock
+  DeliverBooksService deliverBooksService;
+
   @Deployment(resources = {"bookstorediscounts.bpmn", "decisionDiscount.dmn"})
-  // @Deployment(resources = "bookstorediscounts.bpmn")
   @Test
-  public void testHappyPath() {
+  public void testHappyPath() throws InterruptedException {
     Mocks.register("evaluateReaderType", new EvaluateReaderTypeDelegate());
     Mocks.register("proposeSuggestions", new ProposeSuggestionsDelegate());
-    Mocks.register("deliverBooks", new DeliverBooksDelegate());
+    Mocks.register("deliverBooks", new DeliverBooksDelegate(deliverBooksService));
+
+    when(deliverBooksService.deliver(anyInt())).thenReturn(true);
 
     Map<String, Object> variables = new HashMap<String, Object>();
     variables.put("readerType", "silver");
     variables.put("feedbacksGiven", "3");
+    variables.put("booksNumber", 2);
+
 
 
     ProcessInstance processInstance =
@@ -62,14 +76,15 @@ public class BookstoreDiscountUnitTest {
   @Deployment(resources = {"bookstorediscounts.bpmn", "decisionDiscount.dmn"})
   // @Deployment(resources = "bookstorediscounts.bpmn")
   @Test
-  public void testUserRejection() {
+  public void testUserRejection() throws InterruptedException {
     Mocks.register("evaluateReaderType", new EvaluateReaderTypeDelegate());
     Mocks.register("proposeSuggestions", new ProposeSuggestionsDelegate());
-    Mocks.register("deliverBooks", new DeliverBooksDelegate());
+
 
     Map<String, Object> variables = new HashMap<String, Object>();
     variables.put("readerType", "silver");
     variables.put("feedbacksGiven", "3");
+
 
 
     ProcessInstance processInstance =
@@ -94,6 +109,7 @@ public class BookstoreDiscountUnitTest {
   // @Deployment(resources = "bookstorediscounts.bpmn")
   @Test
   public void testUserTimeout() {
+
     Mocks.register("evaluateReaderType", new EvaluateReaderTypeDelegate());
     Mocks.register("proposeSuggestions", new ProposeSuggestionsDelegate());
     Mocks.register("registerTimeout", new RegisterTimeoutDelegate());
